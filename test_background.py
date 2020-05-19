@@ -1,6 +1,14 @@
 import time
+import os
+from gtts import gTTS
 import speech_recognition as sr
+import playsound
 
+def speak(text):
+    tts = gTTS(text=text, lang='en')
+    filename = 'voice.mp3'
+    tts.save(filename)
+    playsound.playsound(filename)
 
 def callback(recognizer, audio):
     print('INFO: Heard smth')
@@ -8,8 +16,9 @@ def callback(recognizer, audio):
         txt = recognizer.recognize_google(audio)
         print("Google Speech Recognition thinks you said: " + txt)
         print(type(txt))
-        if txt == 'okay':
-            print('POWIEDZIAŁ OK')
+        if txt.startswith('okay'):
+            text = txt.replace('okay', '', 1)
+            speak(text)
     except sr.UnknownValueError:
         print("Google Speech Recognition could not understand audio")
     except sr.RequestError as e:
