@@ -11,7 +11,8 @@ Zapis *próby* pracy nad przedmiotem.
 - [ ] Szkielet aplikacji korzystających z powyższych elementów
 - [ ] *Połączenie* z Kalendarzem Googla
 - [ ] *Połączenie* z Wikipedią
-- [ ] *Połączenie* z Wolframem 
+- [ ] *Połączenie* z Wolframem
+- [ ] *Połączenie* z Pogodą 
 - [ ] Opracowanie programu do gotowania
 - [ ] Konsolidacja tego wszystkiego
 - [ ] Dokumentacja
@@ -26,3 +27,4 @@ Zapis *próby* pracy nad przedmiotem.
 | *Połączenie* z Kalendarzem Googla |                                   |              |
 |     *Połączenie* z Wikipedią      |                                   |              |
 |     *Połączenie* z Wolframem      |                                   |              |
+|       *Połączenie* z Pogodą       |                                   |              |
