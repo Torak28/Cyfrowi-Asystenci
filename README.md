@@ -20,8 +20,8 @@ Zapis *próby* pracy nad przedmiotem.
 
 |               Jarek               |               Tomek               |    Michał    |
 | :-------------------------------: | :-------------------------------: | :----------: |
-|           Speach 2 Text           | Opracowanie programu do gotowania | Dokumentacja |
-|           Text 2 Speach           |   Konsolidacja tego wszystkiego   |              |
+|         ~~Speach 2 Text~~         | Opracowanie programu do gotowania | Dokumentacja |
+|         ~~Text 2 Speach~~         |   Konsolidacja tego wszystkiego   |              |
 |        Szkielet aplikacji         |                                   |              |
 | *Połączenie* z Kalendarzem Googla |                                   |              |
 |     *Połączenie* z Wikipedią      |                                   |              |
