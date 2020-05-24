@@ -11,20 +11,31 @@ import speech_recognition as sr
 import pyttsx3
 import pytz
 import subprocess
+import wolframalpha
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 MONTHS = ["january", "february", "march", "april", "may", "june","july", "august", "september","october", "november", "december"]
 DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 DAY_EXTENTIONS = ["rd", "th", "st", "nd"]
 
+# Text 2 Speach
+engine = pyttsx3.init()
+engine.setProperty('rate', 150)
+en_voice_id = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
+engine.setProperty('voice', en_voice_id)
+
+# Speach 2 Text
+r = sr.Recognizer()
+
+# Wolfram API
+app_id = 'ERJAUY-EE7JKY83KJ'
+client = wolframalpha.Client(app_id)
+
 def speak(text):
-    engine = pyttsx3.init()
-    engine.setProperty('rate', 150)
     engine.say(text)
     engine.runAndWait()
 
 def get_audio():
-    r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
         said = ''
@@ -150,6 +161,13 @@ def note(text):
 
     subprocess.Popen(["notepad.exe", file_name])
 
+def wolfram(text):
+    result = client.query(text)
+    answer = next(result.results).text
+
+    print(answer)
+    speak(answer)
+
 SERVICE = authenticate_google()
 print("Start")
 
@@ -158,7 +176,7 @@ text = get_audio().lower()
 # KALENDARZ
 CALENDAR_STRS = ["what do i have", "do i have plans", "am i busy"]
 for phrase in CALENDAR_STRS:
-    if phrase in text.lower():
+    if phrase in text:
         date = get_date(text)
         if date:
             get_events(date, SERVICE)
@@ -169,7 +187,24 @@ for phrase in CALENDAR_STRS:
 NOTE_STRS = ["make a note", "write this down", "remember this", "type this"]
 for phrase in NOTE_STRS:
     if phrase in text:
-        speak("What would you like me to write down? ")
+        speak("What would you like me to write down?")
         write_down = get_audio()
         note(write_down)
         speak("I've made a note of that.")
+
+# POGODA
+WEATHER_STRS = ["what is the weather"]
+for phrase in WEATHER_STRS:
+    if phrase in text:
+        date = get_date(text)
+        if date:
+            phrase = phrase + ' ' + str(date)
+        wolfram(phrase)
+
+# MATEMATYKA
+WEATHER_STRS = ["i have a math question"]
+for phrase in WEATHER_STRS:
+    if phrase in text:
+        speak("What would you like to know?")
+        write_down = get_audio()
+        wolfram(write_down)
