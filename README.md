@@ -11,9 +11,10 @@ Zapis *próby* pracy nad przedmiotem.
 - [x] Szkielet aplikacji korzystających z powyższych elementów
 - [x] *Połączenie* z Kalendarzem Googla
 - [x] *Połączenie* z Notatnikiem
-- [ ] *Połączenie* z Wikipedią
-- [ ] *Połączenie* z Wolframem
-- [ ] *Połączenie* z Pogodą 
+- [x] *Połączenie* z Wikipedią
+- [x] *Połączenie* z Wolframem
+- [x] *Połączenie* z Pogodą 
+- [ ] *Wybudzanie*
 - [ ] Opracowanie programu do gotowania
 - [ ] Konsolidacja tego wszystkiego
 - [ ] Dokumentacja
@@ -27,6 +28,7 @@ Zapis *próby* pracy nad przedmiotem.
 |        ~~Szkielet aplikacji~~         |                                   |              |
 | ~~*Połączenie* z Kalendarzem Googla~~ |                                   |              |
 |    ~~*Połączenie* z Notatnikiem~~     |                                   |              |
-|       *Połączenie* z Wikipedią        |                                   |              |
-|       *Połączenie* z Wolframem        |                                   |              |
-|         *Połączenie* z Pogodą         |                                   |              |
+|     ~~*Połączenie* z Wikipedią~~      |                                   |              |
+|     ~~*Połączenie* z Wolframem~~      |                                   |              |
+|       ~~*Połączenie* z Pogodą~~       |                                   |              |
+|             *Wybudzanie*              |                                   |              |
