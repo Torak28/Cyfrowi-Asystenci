@@ -179,53 +179,60 @@ def ask_wikipedia(text):
     print(result)
     speak(result)
 
+WAKE = "hey tim"
 SERVICE = authenticate_google()
 print("Start")
 
-text = get_audio().lower()
+while True:
+    print("Listening")
+    text = get_audio().lower()
 
-# KALENDARZ
-CALENDAR_STRS = ["what do i have", "do i have plans", "am i busy"]
-for phrase in CALENDAR_STRS:
-    if phrase in text:
-        date = get_date(text)
-        if date:
-            get_events(date, SERVICE)
-        else:
-            speak("Please Try Again")
+    if text.count(WAKE) > 0:
+        speak("I am ready")
+        text = get_audio().lower()
 
-# NOTATKI
-NOTE_STRS = ["make a note", "write this down", "remember this", "type this"]
-for phrase in NOTE_STRS:
-    if phrase in text:
-        speak("What would you like me to write down?")
-        write_down = get_audio()
-        note(write_down)
-        speak("I've made a note of that.")
+        # KALENDARZ
+        CALENDAR_STRS = ["what do i have", "do i have plans", "am i busy"]
+        for phrase in CALENDAR_STRS:
+            if phrase in text:
+                date = get_date(text)
+                if date:
+                    get_events(date, SERVICE)
+                else:
+                    speak("Please Try Again")
 
-# POGODA
-WEATHER_STRS = ["what is the weather"]
-for phrase in WEATHER_STRS:
-    if phrase in text:
-        date = get_date(text)
-        if date:
-            phrase = phrase + ' ' + str(date)
-        wolfram(phrase)
+        # NOTATKI
+        NOTE_STRS = ["make a note", "write this down", "remember this", "type this"]
+        for phrase in NOTE_STRS:
+            if phrase in text:
+                speak("What would you like me to write down?")
+                write_down = get_audio()
+                note(write_down)
+                speak("I've made a note of that.")
 
-# MATEMATYKA
-WEATHER_STRS = ["i have a math question"]
-for phrase in WEATHER_STRS:
-    if phrase in text:
-        speak("What would you like to know?")
-        write_down = get_audio()
-        wolfram(write_down)
+        # POGODA
+        WEATHER_STRS = ["what is the weather"]
+        for phrase in WEATHER_STRS:
+            if phrase in text:
+                date = get_date(text)
+                if date:
+                    phrase = phrase + ' ' + str(date)
+                wolfram(phrase)
 
-# WIKIPEDIA
-WIKIPEDIA_STRS = ["i want to know"]
-for phrase in WIKIPEDIA_STRS:
-    if phrase in text:
-        que = get_question(text, phrase)
-        if que:
-            ask_wikipedia(que)
-        else:
-            speak("Please Try Again")
+        # MATEMATYKA
+        WEATHER_STRS = ["i have a math question"]
+        for phrase in WEATHER_STRS:
+            if phrase in text:
+                speak("What would you like to know?")
+                write_down = get_audio()
+                wolfram(write_down)
+
+        # WIKIPEDIA
+        WIKIPEDIA_STRS = ["i want to know"]
+        for phrase in WIKIPEDIA_STRS:
+            if phrase in text:
+                que = get_question(text, phrase)
+                if que:
+                    ask_wikipedia(que)
+                else:
+                    speak("Please Try Again")
