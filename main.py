@@ -20,36 +20,33 @@ MONTHS = ["january", "february", "march", "april", "may", "june","july", "august
 DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 DAY_EXTENTIONS = ["rd", "th", "st", "nd"]
 
-# Text 2 Speach
-engine = pyttsx3.init()
-engine.setProperty('rate', 150)
-en_voice_id = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
-engine.setProperty('voice', en_voice_id)
-
-# Speach 2 Text
-r = sr.Recognizer()
-
 # Wolfram API
 app_id = 'ERJAUY-EE7JKY83KJ'
 client = wolframalpha.Client(app_id)
 
 def speak(text):
+    # Text 2 Speach
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 150)
+    en_voice_id = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_EN-US_ZIRA_11.0"
+    engine.setProperty('voice', en_voice_id)
     engine.say(text)
     engine.runAndWait()
 
 def get_audio():
+    # Speach 2 Text
+    r = sr.Recognizer()
     with sr.Microphone() as source:
         audio = r.listen(source)
-        said = ''
+        said = ""
+
         try:
             said = r.recognize_google(audio)
             print(said)
-        except sr.UnknownValueError:
-            print("Google Speech Recognition could not understand audio")
-        except sr.RequestError as e:
-            print("Could not request results from Google Speech Recognition service; {0}".format(e))
+        except Exception as e:
+            print("Exception: " + str(e))
 
-    return said
+    return said.lower()
 
 def authenticate_google():
     """Shows basic usage of the Google Calendar API.
@@ -150,7 +147,7 @@ def get_events(day, service):
             if int(start_time.split(":")[0]) < 12:
                 start_time = start_time + "am"
             else:
-                start_time = str(int(start_time.split(":")[0])-12)
+                start_time = str(int(start_time.split(":")[0])-12) + start_time.split(":")[1]
                 start_time = start_time + "pm"  
 
             speak(event["summary"] + " at " + start_time)
@@ -179,17 +176,18 @@ def ask_wikipedia(text):
     print(result)
     speak(result)
 
-WAKE = "hey tim"
+standard_txt = 'If You want to know more, just ask Sarah!'
+
+WAKE = "okay sarah"
 SERVICE = authenticate_google()
 print("Start")
 
 while True:
     print("Listening")
-    text = get_audio().lower()
-
+    text = get_audio()
     if text.count(WAKE) > 0:
         speak("I am ready")
-        text = get_audio().lower()
+        text = get_audio()
 
         # KALENDARZ
         CALENDAR_STRS = ["what do i have", "do i have plans", "am i busy"]
@@ -198,8 +196,9 @@ while True:
                 date = get_date(text)
                 if date:
                     get_events(date, SERVICE)
+                    speak(standard_txt)
                 else:
-                    speak("Please Try Again")
+                    speak("I don't understand")
 
         # NOTATKI
         NOTE_STRS = ["make a note", "write this down", "remember this", "type this"]
@@ -218,6 +217,7 @@ while True:
                 if date:
                     phrase = phrase + ' ' + str(date)
                 wolfram(phrase)
+                speak(standard_txt)
 
         # MATEMATYKA
         WEATHER_STRS = ["i have a math question"]
@@ -226,6 +226,7 @@ while True:
                 speak("What would you like to know?")
                 write_down = get_audio()
                 wolfram(write_down)
+                speak(standard_txt)
 
         # WIKIPEDIA
         WIKIPEDIA_STRS = ["i want to know"]
@@ -234,5 +235,8 @@ while True:
                 que = get_question(text, phrase)
                 if que:
                     ask_wikipedia(que)
+                    speak(standard_txt)
                 else:
                     speak("Please Try Again")
+
+    print('----')
