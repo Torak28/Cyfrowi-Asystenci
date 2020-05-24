@@ -8,7 +8,7 @@ import os
 import time
 import playsound
 import speech_recognition as sr
-from gtts import gTTS
+import pyttsx3
 import pytz
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -17,11 +17,10 @@ DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sun
 DAY_EXTENTIONS = ["rd", "th", "st", "nd"]
 
 def speak(text):
-    tts = gTTS(text=text, lang='en')
-    filename = 'voice.mp3'
-    tts.save(filename)
-    playsound.playsound(filename)
-    os.remove(filename)
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 150)
+    engine.say(text)
+    engine.runAndWait()
 
 def get_audio():
     r = sr.Recognizer()
@@ -113,21 +112,44 @@ def get_date(text):
     if day != -1:
         return datetime.date(month=month, day=day, year=year)
 
-def get_events(n, service):
+def get_events(day, service):
     # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print(now)
-    print(f'Getting the upcoming {n} events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=n, singleEvents=True,
+    date = datetime.datetime.combine(day, datetime.datetime.min.time())
+    end = datetime.datetime.combine(day, datetime.datetime.max.time())
+    utc = pytz.UTC
+    date = date.astimezone(utc)
+    end = end.astimezone(utc)
+    events_result = service.events().list(calendarId='primary', timeMin=date.isoformat(), timeMax=end.isoformat(),
+                                        singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     if not events:
-        print('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
+        speak('No upcoming events found.')
+    else:
+        speak(f"You have {len(events)} events on this day.")
 
-service = authenticate_google()
-get_events(2, service)
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            print(start, event['summary'])
+            start_time = str(start.split("T")[1].split("-")[0])
+            if int(start_time.split(":")[0]) < 12:
+                start_time = start_time + "am"
+            else:
+                start_time = str(int(start_time.split(":")[0])-12)
+                start_time = start_time + "pm"  
+
+            speak(event["summary"] + " at " + start_time)
+
+SERVICE = authenticate_google()
+print("Start")
+text = get_audio()
+
+CALENDAR_STRS = ["what do i have", "do i have plans", "am i busy"]
+for phrase in CALENDAR_STRS:
+    if phrase in text.lower():
+        date = get_date(text)
+        if date:
+            get_events(date, SERVICE)
+        else:
+            speak("Please Try Again")
