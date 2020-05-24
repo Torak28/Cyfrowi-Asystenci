@@ -14,10 +14,12 @@ Zapis *próby* pracy nad przedmiotem.
 - [x] *Połączenie* z Wikipedią
 - [x] *Połączenie* z Wolframem
 - [x] *Połączenie* z Pogodą 
-- [ ] *Wybudzanie*
+- [x] *Wybudzanie*
 - [ ] Opracowanie programu do gotowania
 - [ ] Konsolidacja tego wszystkiego
 - [ ] Dokumentacja
+
+[Google Calendar API](https://developers.google.com/calendar/quickstart/python?authuser=3)
 
 ## Podział pracy
 
@@ -31,4 +33,4 @@ Zapis *próby* pracy nad przedmiotem.
 |     ~~*Połączenie* z Wikipedią~~      |                                   |              |
 |     ~~*Połączenie* z Wolframem~~      |                                   |              |
 |       ~~*Połączenie* z Pogodą~~       |                                   |              |
-|             *Wybudzanie*              |                                   |              |
+|           ~~*Wybudzanie*~~            |                                   |              |
