@@ -8,8 +8,9 @@ Zapis *próby* pracy nad przedmiotem.
 
 - [x] Speach 2 Text
 - [x] Text 2 Speach
-- [ ] Szkielet aplikacji korzystających z powyższych elementów
-- [ ] *Połączenie* z Kalendarzem Googla
+- [x] Szkielet aplikacji korzystających z powyższych elementów
+- [x] *Połączenie* z Kalendarzem Googla
+- [x] *Połączenie* z Notatnikiem
 - [ ] *Połączenie* z Wikipedią
 - [ ] *Połączenie* z Wolframem
 - [ ] *Połączenie* z Pogodą 
@@ -19,12 +20,13 @@ Zapis *próby* pracy nad przedmiotem.
 
 ## Podział pracy
 
-|               Jarek               |               Tomek               |    Michał    |
-| :-------------------------------: | :-------------------------------: | :----------: |
-|         ~~Speach 2 Text~~         | Opracowanie programu do gotowania | Dokumentacja |
-|         ~~Text 2 Speach~~         |   Konsolidacja tego wszystkiego   |              |
-|        Szkielet aplikacji         |                                   |              |
-| *Połączenie* z Kalendarzem Googla |                                   |              |
-|     *Połączenie* z Wikipedią      |                                   |              |
-|     *Połączenie* z Wolframem      |                                   |              |
-|       *Połączenie* z Pogodą       |                                   |              |
+|                 Jarek                 |               Tomek               |    Michał    |
+| :-----------------------------------: | :-------------------------------: | :----------: |
+|           ~~Speach 2 Text~~           | Opracowanie programu do gotowania | Dokumentacja |
+|           ~~Text 2 Speach~~           |   Konsolidacja tego wszystkiego   |              |
+|        ~~Szkielet aplikacji~~         |                                   |              |
+| ~~*Połączenie* z Kalendarzem Googla~~ |                                   |              |
+|    ~~*Połączenie* z Notatnikiem~~     |                                   |              |
+|       *Połączenie* z Wikipedią        |                                   |              |
+|       *Połączenie* z Wolframem        |                                   |              |
+|         *Połączenie* z Pogodą         |                                   |              |
