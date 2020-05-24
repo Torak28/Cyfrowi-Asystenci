@@ -12,6 +12,8 @@ import pyttsx3
 import pytz
 import subprocess
 import wolframalpha
+import wikipedia
+
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 MONTHS = ["january", "february", "march", "april", "may", "june","july", "august", "september","october", "november", "december"]
@@ -168,6 +170,15 @@ def wolfram(text):
     print(answer)
     speak(answer)
 
+def get_question(text, phrase):
+    return text.split(phrase)[-1][1:]
+
+def ask_wikipedia(text):
+    print(text)
+    result = wikipedia.summary(text, sentences=3)
+    print(result)
+    speak(result)
+
 SERVICE = authenticate_google()
 print("Start")
 
@@ -208,3 +219,13 @@ for phrase in WEATHER_STRS:
         speak("What would you like to know?")
         write_down = get_audio()
         wolfram(write_down)
+
+# WIKIPEDIA
+WIKIPEDIA_STRS = ["i want to know"]
+for phrase in WIKIPEDIA_STRS:
+    if phrase in text:
+        que = get_question(text, phrase)
+        if que:
+            ask_wikipedia(que)
+        else:
+            speak("Please Try Again")
