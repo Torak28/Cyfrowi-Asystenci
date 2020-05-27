@@ -23,3 +23,7 @@ Zapis *próby* pracy nad przedmiotem.
 
 - [Google Calendar API](https://developers.google.com/calendar/quickstart/python?authuser=3)
 - [Yummly API](https://developer.yummly.com/documentation.html)
+
+## Diagram
+
+![diagram](https://i.imgur.com/i0bSUdv.png)
