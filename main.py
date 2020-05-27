@@ -32,6 +32,7 @@ class Sarah:
         self.client = wolframalpha.Client(app_id)
 
         self.STANDARD_TXT = 'If You want to know more, just ask Sarah!'
+        self.NOT_UNDERSTAND = "I don't understand, try one more time"
         self.WAKE = "okay sarah"
 
     def speak(self, text):
@@ -187,8 +188,8 @@ class Sarah:
         self.speak(result)
 
     def select_recipe(self, recipe_list):
-        print(recipe_list)
         recipe_list = [x for x in recipe_list if x['prep_steps']]
+        print(recipe_list)
         recipe = random.choice(recipe_list)
         return recipe
 
@@ -218,7 +219,9 @@ class Sarah:
                             self.get_events(date, SERVICE)
                             self.speak(self.STANDARD_TXT)
                         else:
-                            self.speak("I don't understand")
+                            self.speak(self.NOT_UNDERSTAND)
+                        self.speak(self.STANDARD_TXT)
+                            
 
                 # NOTATKI
                 NOTE_STRS = ["make a note", "write this down", "remember this", "type this"]
@@ -228,6 +231,7 @@ class Sarah:
                         write_down = self.get_audio()
                         self.note(write_down)
                         self.speak("I've made a note of that.")
+                        self.speak(self.STANDARD_TXT)
 
                 # POGODA
                 WEATHER_STRS = ["what is the weather"]
@@ -236,6 +240,8 @@ class Sarah:
                         date = self.get_date(text)
                         if date:
                             phrase = phrase + ' ' + str(date)
+                        else:
+                            self.speak(self.NOT_UNDERSTAND)
                         self.wolfram(phrase)
                         self.speak(self.STANDARD_TXT)
 
@@ -257,7 +263,8 @@ class Sarah:
                             self.ask_wikipedia(que)
                             self.speak(self.STANDARD_TXT)
                         else:
-                            self.speak("Please Try Again")
+                            self.speak(self.NOT_UNDERSTAND)
+                        self.speak(self.STANDARD_TXT)
                 
                 # PRZEPISY
                 RECIPE_STRS = ["find a recipe"]
@@ -265,7 +272,7 @@ class Sarah:
                     if phrase in text:
                         self.speak("What ingredients do you have?")
                         ingredients = self.get_audio().split(' ')
-                        print(f'Your ingredients: {ingredients}')
+                        print(f'Ingredients: {ingredients}')
                         if ingredients:
                             try:
                                 recipe = self.get_recipe(ingredients)
@@ -275,9 +282,13 @@ class Sarah:
                                 if "yes" in response:
                                     print(recipe["prep_steps"])
                                     self.speak(recipe["prep_steps"])
+                                else:
+                                    self.speak("okay, let me know if You want to cook something")
                             except(Exception):
                                 self.speak("Unfortunately I haven't found any recipes")
-                            self.speak(self.STANDARD_TXT)
+                        else:
+                            self.speak(self.NOT_UNDERSTAND)
+                        self.speak(self.STANDARD_TXT)
 
             print('----')
 
