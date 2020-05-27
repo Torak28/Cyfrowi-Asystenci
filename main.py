@@ -32,7 +32,7 @@ class YummlyExtractor():
         ingredients_string = ',+'.join(ingredients)
         query = {'q': ingredients_string,
                  'start': '0',
-                 'maxResult': '10'}
+                 'maxResult': '4'}
         url, headers = self.url, self.headers
 
         response = requests.request("GET", url=url, headers=headers, params=query).json()
@@ -68,13 +68,14 @@ class Sarah:
 
         config = configparser.ConfigParser()
         config.read("config.cfg")
-        # Wolfram API
+
         app_id = config.get("CONFIGURATION","wolfram_app_id")
         self.client = wolframalpha.Client(app_id)
 
         self.STANDARD_TXT = 'If You want to know more, just ask Sarah!'
-        self.NOT_UNDERSTAND = "I don't understand, try one more time"
+        self.NOT_UNDERSTAND = "Sorry, but I don't understand"
         self.WAKE = "okay sarah"
+        self.SERVICE = self.authenticate_google()
 
     def speak(self, text):
         # Text 2 Speach
@@ -176,7 +177,6 @@ class Sarah:
             return datetime.date(month=month, day=day, year=year)
 
     def get_events(self, day, service):
-        # Call the Calendar API
         date = datetime.datetime.combine(day, datetime.datetime.min.time())
         end = datetime.datetime.combine(day, datetime.datetime.max.time())
         utc = pytz.UTC
@@ -196,11 +196,13 @@ class Sarah:
                 start = event['start'].get('dateTime', event['start'].get('date'))
                 print(start, event['summary'])
                 start_time = str(start.split("T")[1].split("-")[0])
+                start_time = str(start_time.split('+')[0])
                 if int(start_time.split(":")[0]) < 12:
-                    start_time = start_time + "am"
+                    start_time = str(start_time.split(':')[0] + start_time.split(':')[1])
+                    start_time = start_time + " am"
                 else:
                     start_time = str(int(start_time.split(":")[0])-12) + start_time.split(":")[1]
-                    start_time = start_time + "pm"  
+                    start_time = start_time + " pm"
 
                 self.speak(event["summary"] + " at " + start_time)
 
@@ -222,35 +224,52 @@ class Sarah:
     def get_question(self, text, phrase):
         return text.split(phrase)[-1][1:]
 
-    def get_ingredients(self, text, phrase):
-        return text.split(phrase)[-1][1:].split(' ')
-
     def ask_wikipedia(self, text):
         print(text)
         result = wikipedia.summary(text, sentences=3)
         print(result)
         self.speak(result)
 
-    def select_recipe(self, recipe_list):
-        recipe_list = [x for x in recipe_list if x['prep_steps']]
-        self.speak(f'I found {len(recipe_list[0] + 1)} recipies')
-        for i in len(recipe_list[0]):
-            self.speak(f"{i + 1}: {recipe_list[0][i]['name']}")
-        self.speak('What recipe number You want to cook?')
-        text = self.get_audio()
-        print(text)
-        recipe = random.choice(recipe_list)
-        return recipe
+    def get_ingredients(self, text, phrase):
+        return text.split(phrase)[-1][1:].split(' ')
+
+    def get_recipe_number(self, text):
+
+        number = text.split('recipe')[0][:-1]
+        print(number)
+        ret = -1
+
+        if number == 'first':
+            ret = 1
+        elif number == 'second':
+            ret = 2
+        elif number == 'third':
+            ret = 3
+        elif number == 'fourth':
+            ret = 4
+
+        return ret
 
     def get_recipe(self, text):
         extractor = YummlyExtractor()
         recipe_list = extractor.extract_list(text)
-        recipe = self.select_recipe(recipe_list)
+        recipe_list = [x for x in recipe_list if x['prep_steps']]
+        self.speak(f'I found {len(recipe_list)} recipies')
+        for i in range(len(recipe_list)):
+            self.speak(f'{i + 1}: {recipe_list[i]["name"]}')
+            print(f'{i + 1}: {recipe_list[i]["name"]}')
+        self.speak('What recipe number You want to cook?')
+        text = self.get_audio()
+        number = self.get_recipe_number(text)
+        if number in [1, 2, 3, 4]:
+            print(f'{recipe_list[number - 1]["name"]}')
+            recipe = recipe_list[number - 1]
+        else:
+            recipe = -1
         return recipe
 
     def run(self):
         print("Start")
-        SERVICE = self.authenticate_google()
 
         while True:
             print("Listening")
@@ -265,8 +284,7 @@ class Sarah:
                     if phrase in text:
                         date = self.get_date(text)
                         if date:
-                            self.get_events(date, SERVICE)
-                            self.speak(self.STANDARD_TXT)
+                            self.get_events(date, self.SERVICE)
                         else:
                             self.speak(self.NOT_UNDERSTAND)
                         self.speak(self.STANDARD_TXT)
@@ -283,19 +301,17 @@ class Sarah:
                         self.speak(self.STANDARD_TXT)
 
                 # POGODA
-                WEATHER_STRS = ["what is the weather"]
+                WEATHER_STRS = ["what is the weather", "weather report"]
                 for phrase in WEATHER_STRS:
                     if phrase in text:
                         date = self.get_date(text)
                         if date:
                             phrase = phrase + ' ' + str(date)
-                        else:
-                            self.speak(self.NOT_UNDERSTAND)
                         self.wolfram(phrase)
                         self.speak(self.STANDARD_TXT)
 
                 # MATEMATYKA
-                WEATHER_STRS = ["i have a math question"]
+                WEATHER_STRS = ["i have a math question", "i have a math problem"]
                 for phrase in WEATHER_STRS:
                     if phrase in text:
                         self.speak("What would you like to know?")
@@ -304,13 +320,12 @@ class Sarah:
                         self.speak(self.STANDARD_TXT)
 
                 # WIKIPEDIA
-                WIKIPEDIA_STRS = ["i want to know"]
+                WIKIPEDIA_STRS = ["i want to know", "i have a question"]
                 for phrase in WIKIPEDIA_STRS:
                     if phrase in text:
                         que = self.get_question(text, phrase)
                         if que:
                             self.ask_wikipedia(que)
-                            self.speak(self.STANDARD_TXT)
                         else:
                             self.speak(self.NOT_UNDERSTAND)
                         self.speak(self.STANDARD_TXT)
@@ -326,14 +341,17 @@ class Sarah:
                         if ingredients:
                             try:
                                 recipe = self.get_recipe(ingredients)
-                                self.speak("I have found a recipe for {}".format(recipe["name"]))
-                                self.speak("Do you want me to read it out loud?")
-                                response = self.get_audio()
-                                if "yes" in response:
-                                    print(recipe["prep_steps"])
-                                    self.speak(recipe["prep_steps"])
+                                if recipe != -1:
+                                    self.speak("Okay, We will cook {}".format(recipe["name"]))
+                                    self.speak("Do you want me to read it out loud?")
+                                    response = self.get_audio()
+                                    if "yes" in response:
+                                        print(recipe["prep_steps"])
+                                        self.speak(recipe["prep_steps"])
+                                    else:
+                                        self.speak("okay, let me know if You want to cook something")
                                 else:
-                                    self.speak("okay, let me know if You want to cook something")
+                                    self.speak(self.NOT_UNDERSTAND)
                             except(Exception):
                                 self.speak("Unfortunately I haven't found any recipes")
                         else:
