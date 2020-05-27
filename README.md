@@ -13,7 +13,7 @@ Zapis *próby* pracy nad przedmiotem.
 - [x] ~~*Połączenie* z Notatnikiem~~
 - [x] ~~*Połączenie* z Wikipedią~~
 - [x] ~~*Połączenie* z Wolframem~~
-- [x] ~~*Połączenie* z Pogodą ~~
+- [x] ~~*Połączenie* z Pogodą~~
 - [x] ~~*Wybudzanie*~~
 - [x] ~~Opracowanie programu do gotowania~~
 - [x] ~~Konsolidacja tego wszystkiego~~
