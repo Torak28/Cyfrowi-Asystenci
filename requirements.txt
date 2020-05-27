@@ -27,6 +27,9 @@ pyttsx3 == 2.87
 # D:\Studia\Cyfrowi-Asystenci\main.py: 12
 pytz == 2019.3
 
+# D:\Studia\Cyfrowi-Asystenci\extractors.py: 1
+requests == 2.22.0
+
 # D:\Studia\Cyfrowi-Asystenci\main.py: 15
 wikipedia == 1.4.0
 
