@@ -320,7 +320,7 @@ class Sarah:
                         self.speak(self.STANDARD_TXT)
 
                 # WIKIPEDIA
-                WIKIPEDIA_STRS = ["i want to know", "i have a question"]
+                WIKIPEDIA_STRS = ["i want to know", "i have a question about", "i want to ask"]
                 for phrase in WIKIPEDIA_STRS:
                     if phrase in text:
                         que = self.get_question(text, phrase)
